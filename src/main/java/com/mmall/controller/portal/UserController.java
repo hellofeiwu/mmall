@@ -43,6 +43,8 @@ public class UserController {
         return ServerResponse.createBySuccess();
     }
 
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @ResponseBody
     public ServerResponse<String> register(User user) {
         return iUserService.register(user);
     }
