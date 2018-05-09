@@ -28,7 +28,7 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("invalid password");
         }
         user.setPassword("");
-        return ServerResponse.createBySuccess("login succeeded", user);
+        return ServerResponse.createBySuccess("login succeed", user);
     }
 
     @Override
