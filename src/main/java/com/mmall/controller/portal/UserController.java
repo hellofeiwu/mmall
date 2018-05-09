@@ -42,4 +42,8 @@ public class UserController {
         session.removeAttribute(Const.CURRENT_USER);
         return ServerResponse.createBySuccess();
     }
+
+    public ServerResponse<String> register(User user) {
+        return iUserService.register(user);
+    }
 }
