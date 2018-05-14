@@ -48,4 +48,20 @@ public class UserController {
     public ServerResponse<String> register(User user) {
         return iUserService.register(user);
     }
+
+    @RequestMapping(value = "validation", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> validation(String str, String type) {
+        return iUserService.validation(str, type);
+    }
+
+    @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getUserInfo(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("user is not logged in");
+        }
+        return ServerResponse.createBySuccess(user);
+    }
 }

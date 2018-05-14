@@ -2,12 +2,15 @@ package com.mmall.service.impl;
 
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
+import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service("iUserService")
 public class UserServiceImpl implements IUserService {
@@ -33,13 +36,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ServerResponse<String> register(User user) {
-        int resultCount = userMapper.checkUsername(user.getUsername());
-        if (resultCount > 0) {
+        int resultCount;
+        if (!validation(user.getUsername(), "username").isSuccess()) {
             return ServerResponse.createByErrorMessage("username already exist");
         }
 
-        resultCount = userMapper.checkEmail(user.getEmail());
-        if (resultCount > 0) {
+        if (!validation(user.getEmail(), "email").isSuccess()) {
             return ServerResponse.createByErrorMessage("email already exist");
         }
 
@@ -55,5 +57,30 @@ public class UserServiceImpl implements IUserService {
         }
 
         return ServerResponse.createBySuccessMessage("register succeed");
+    }
+
+    @Override
+    public ServerResponse<String> validation(String str, String type) {
+        int resultCount;
+        if (type.equals(Const.USERNAME)) {
+            resultCount = userMapper.checkUsername(str);
+            if (resultCount > 0) {
+                return ServerResponse.createByErrorMessage("username already exist");
+            }
+        }
+
+        if (type.equals(Const.EMAIL)) {
+            resultCount = userMapper.checkEmail(str);
+            if (resultCount > 0) {
+                return ServerResponse.createByErrorMessage("email already exist");
+            }
+        }
+        return ServerResponse.createBySuccessMessage("valid");
+    }
+
+    @Override
+    public void generateToken(String username) {
+        String token = UUID.randomUUID().toString();
+        TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, token);
     }
 }
