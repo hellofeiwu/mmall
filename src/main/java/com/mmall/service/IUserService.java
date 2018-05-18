@@ -8,4 +8,5 @@ public interface IUserService {
     ServerResponse<String> register(User user);
     ServerResponse<String> validation(String str, String type);
     void generateToken(String username);
+    ServerResponse checkAdminRole(User user);
 }

@@ -83,4 +83,12 @@ public class UserServiceImpl implements IUserService {
         String token = UUID.randomUUID().toString();
         TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, token);
     }
+
+    // backend
+    public ServerResponse checkAdminRole(User user) {
+        if (user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
+    }
 }
