@@ -58,4 +58,36 @@ public class CategoryManageController {
             return ServerResponse.createByErrorMessage("not allowed to access");
         }
     }
+
+    @RequestMapping("get_child_category")
+    @ResponseBody
+    public ServerResponse getChildParallelCategory(HttpSession session,
+                                                     @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if (user == null) {
+//            ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+//        }
+//
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iCategoryService.getChildParallelCategory(categoryId);
+//        }else {
+//            return ServerResponse.createByErrorMessage("not allowed to access");
+//        }
+    }
+
+    @RequestMapping("get_category_and_child_id")
+    @ResponseBody
+    public ServerResponse getCategoryAndChildId(HttpSession session,
+                                                  Integer categoryId) {
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if (user == null) {
+//            ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+//        }
+//
+//        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iCategoryService.getCategoryAndChildId(categoryId);
+//        }else {
+//            return ServerResponse.createByErrorMessage("not allowed to access");
+//        }
+    }
 }
