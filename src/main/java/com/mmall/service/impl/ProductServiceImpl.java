@@ -39,7 +39,7 @@ public class ProductServiceImpl implements IProductService{
                 return ServerResponse.createByErrorMessage("save failed");
             }
         }
-        return null;
+        return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
     }
 
     public ServerResponse setSaleStatus(Integer productId, Integer status) {
