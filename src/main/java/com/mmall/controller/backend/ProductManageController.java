@@ -36,4 +36,18 @@ public class ProductManageController {
 //            return ServerResponse.createByErrorMessage("not allowed to access");
 //        }
     }
+
+    @RequestMapping("setSaleStatus")
+    @ResponseBody
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()) {
+            return iProductService.setSaleStatus(productId, status);
+        }else {
+            return ServerResponse.createByErrorMessage("not allowed to access");
+        }
+    }
 }
