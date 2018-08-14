@@ -10,6 +10,7 @@ import com.mmall.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -54,6 +55,24 @@ public class ProductManageController {
     @RequestMapping("getDetail")
     @ResponseBody
     public ServerResponse getDetail(HttpSession session, Integer productId) {
+//        User user = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+//        }
+//        if(iUserService.checkAdminRole(user).isSuccess()) {
+            return iProductService.getDetail(productId);
+//        }else {
+//            return ServerResponse.createByErrorMessage("not allowed to access");
+//        }
+    }
+
+    @RequestMapping("list")
+    @ResponseBody
+    public ServerResponse getList(
+            HttpSession session,
+            Integer productId,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");

@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.dao.CategoryMapper;
@@ -13,6 +14,8 @@ import com.mmall.vo.ProductDetailVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService{
@@ -101,6 +104,15 @@ public class ProductServiceImpl implements IProductService{
         productDetailVo.setCreateTime(DateTimeUtil.dateToStr(product.getCreateTime()));
         productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
 
+        return productDetailVo;
+    }
+
+    public ServerResponse getList(int pageNum, int pageSize) {
+        // PageHelper startPage
+        // sql
+        // PageHelper end
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> productList = productMapper.selectList();
         return null;
     }
 }
