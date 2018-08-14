@@ -50,4 +50,18 @@ public class ProductManageController {
             return ServerResponse.createByErrorMessage("not allowed to access");
         }
     }
+
+    @RequestMapping("getDetail")
+    @ResponseBody
+    public ServerResponse getDetail(HttpSession session, Integer productId) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()) {
+            return iProductService.getDetail(productId);
+        }else {
+            return ServerResponse.createByErrorMessage("not allowed to access");
+        }
+    }
 }
