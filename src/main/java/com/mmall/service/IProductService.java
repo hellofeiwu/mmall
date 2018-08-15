@@ -1,11 +1,13 @@
 package com.mmall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
+import com.mmall.vo.ProductDetailVo;
 
 public interface IProductService {
     ServerResponse saveProduct(Product product);
     ServerResponse setSaleStatus(Integer productId, Integer status);
-    ServerResponse getDetail(Integer productId);
-    ServerResponse getList(int pageNum, int pageSize);
+    ServerResponse<ProductDetailVo> getDetail(Integer productId);
+    ServerResponse<PageInfo> getList(int pageNum, int pageSize);
 }

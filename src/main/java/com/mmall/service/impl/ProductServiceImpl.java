@@ -71,7 +71,7 @@ public class ProductServiceImpl implements IProductService{
         }
     }
 
-    public ServerResponse getDetail(Integer productId) {
+    public ServerResponse<ProductDetailVo> getDetail(Integer productId) {
         if(productId == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements IProductService{
         return productDetailVo;
     }
 
-    public ServerResponse getList(int pageNum, int pageSize) {
+    public ServerResponse<PageInfo> getList(int pageNum, int pageSize) {
         // PageHelper startPage
         // sql
         // PageHelper end
