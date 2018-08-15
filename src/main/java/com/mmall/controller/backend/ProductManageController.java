@@ -82,4 +82,23 @@ public class ProductManageController {
 //            return ServerResponse.createByErrorMessage("not allowed to access");
 //        }
     }
+
+    @RequestMapping("search")
+    @ResponseBody
+    public ServerResponse searchProduct(
+            HttpSession session,
+            Integer productId,
+            String productName,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+//        User user = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(user == null) {
+//            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+//        }
+//        if(iUserService.checkAdminRole(user).isSuccess()) {
+        return iProductService.searchProduct(productId, productName, pageNum, pageSize);
+//        }else {
+//            return ServerResponse.createByErrorMessage("not allowed to access");
+//        }
+    }
 }
