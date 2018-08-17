@@ -1,6 +1,8 @@
 package com.mmall.service.impl;
 
+import com.google.common.collect.Lists;
 import com.mmall.service.IFileService;
+import com.mmall.util.FTPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +33,7 @@ public class FileServiceImpl implements IFileService {
             file.transferTo(targetFile);
             // file upload succeed
             // todo upload targetFile to FTP
+            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
             // todo after upload, remove the file in upload folder
         } catch (IOException e) {
             logger.error("file upload exception", e);
