@@ -3,12 +3,15 @@ package com.mmall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.dao.CategoryMapper;
 import com.mmall.dao.ProductMapper;
 import com.mmall.pojo.Category;
 import com.mmall.pojo.Product;
+import com.mmall.service.ICategoryService;
 import com.mmall.service.IProductService;
 import com.mmall.util.DateTimeUtil;
 import com.mmall.util.PropertiesUtil;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService{
@@ -28,6 +32,9 @@ public class ProductServiceImpl implements IProductService{
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ICategoryService iCategoryService;
 
     public ServerResponse saveProduct(Product product) {
         if(product != null) {
@@ -77,6 +84,19 @@ public class ProductServiceImpl implements IProductService{
         }
         Product product = productMapper.selectByPrimaryKey(productId);
         if(product == null) {
+            return ServerResponse.createByErrorMessage("product not found");
+        }
+        ProductDetailVo productDetailVo = setProductDetailVo(product);
+        return ServerResponse.createBySuccess(productDetailVo);
+    }
+
+    public ServerResponse<ProductDetailVo> getProductDetail(Integer productId) {
+        if(productId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if(product == null
+                || product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()) {
             return ServerResponse.createByErrorMessage("product not found");
         }
         ProductDetailVo productDetailVo = setProductDetailVo(product);
@@ -145,6 +165,46 @@ public class ProductServiceImpl implements IProductService{
         PageHelper.startPage(pageNum, pageSize);
         if(StringUtils.isNoneBlank(productName)) {
             productName = new StringBuilder().append("%").append(productName).append("%").toString();
+        }
+
+        List<Product> productList = productMapper.selectByNameAndId(productId, productName);
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for(Product item : productList) {
+            productListVoList.add(setProductListVo(item));
+        }
+
+        PageInfo pageResult= new PageInfo(productList); // init page structure
+        pageResult.setList(productListVoList); // put in real content
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    public ServerResponse<PageInfo> getProductByKeywordCategoryId(String keyword,
+                                                                  Integer categoryId,
+                                                                  int pageNum,
+                                                                  int pageSize,
+                                                                  String orderBy) {
+        if(StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+
+        Set<Integer> categoryIdSet = Sets.newHashSet();
+
+        PageHelper.startPage(pageNum, pageSize);
+        if (categoryId != null) {
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if(category == null && StringUtils.isBlank(keyword)) {
+                List<ProductListVo> productListVoList = Lists.newArrayList();
+                PageInfo pageInfo = new PageInfo(productListVoList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+            categoryIdSet = iCategoryService.getCategoryAndChildId(categoryId).getData();
+        }
+
+        if(StringUtils.isNoneBlank(keyword)) {
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+        if(StringUtils.isNoneBlank(orderBy)) {
+
         }
 
         List<Product> productList = productMapper.selectByNameAndId(productId, productName);
