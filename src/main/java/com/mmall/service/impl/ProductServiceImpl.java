@@ -204,10 +204,15 @@ public class ProductServiceImpl implements IProductService{
             keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
         }
         if(StringUtils.isNoneBlank(orderBy)) {
-
+            if(Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)) {
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0] + " " + orderByArray[1]);
+            }
         }
 
-        List<Product> productList = productMapper.selectByNameAndId(productId, productName);
+        List<Product> productList = productMapper.selectByNameAndCategoryIds(
+                categoryIdSet.size()==0?null:categoryIdSet,
+                StringUtils.isBlank(keyword)?null:keyword);
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product item : productList) {
             productListVoList.add(setProductListVo(item));
