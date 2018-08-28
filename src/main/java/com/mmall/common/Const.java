@@ -21,6 +21,14 @@ public class Const {
         );
     }
 
+    public interface Cart {
+        int CHECKED = 1; // cart selected
+        int UN_CHECKED = 0; // cart not selected
+
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+    }
+
     public enum ProductStatusEnum {
         ON_SALE(1, "on line");
         private int code;
