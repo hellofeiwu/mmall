@@ -1,12 +1,15 @@
 package com.mmall.controller.backend;
 
+import com.google.common.collect.Maps;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
 import com.mmall.pojo.User;
+import com.mmall.service.IFileService;
 import com.mmall.service.IProductService;
 import com.mmall.service.IUserService;
+import com.mmall.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/manage/product")
@@ -26,6 +30,9 @@ public class ProductManageController {
 
     @Autowired
     private IProductService iProductService;
+
+    @Autowired
+    private IFileService iFileService;
 
     @RequestMapping("save")
     @ResponseBody
@@ -105,8 +112,31 @@ public class ProductManageController {
 //        }
     }
 
+    @RequestMapping("upload")
+    @ResponseBody
     public ServerResponse upload(MultipartFile file, HttpServletRequest request) {
         String path = request.getSession().getServletContext().getRealPath("upload");
-        return null;
+        String targetFileName = iFileService.upload(file, path);
+        String url = PropertiesUtil.getProperty("") + targetFileName;
+
+        Map fileMap = Maps.newHashMap();
+        fileMap.put("uri", targetFileName);
+        fileMap.put("url", url);
+
+        return ServerResponse.createBySuccess(fileMap);
     }
+
+//    @RequestMapping("richtextImageUpload")
+//    @ResponseBody
+//    public ServerResponse richtextImageupload(MultipartFile file, HttpServletRequest request) {
+//        String path = request.getSession().getServletContext().getRealPath("upload");
+//        String targetFileName = iFileService.upload(file, path);
+//        String url = PropertiesUtil.getProperty("") + targetFileName;
+//
+//        Map fileMap = Maps.newHashMap();
+//        fileMap.put("uri", targetFileName);
+//        fileMap.put("url", url);
+//
+//        return ServerResponse.createBySuccess(fileMap);
+//    }
 }
