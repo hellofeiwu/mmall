@@ -54,6 +54,22 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartVo);
     }
 
+    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+        if(productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
+
+        if(cart != null) {
+            cart.setQuantity(count);
+            cartMapper.updateByPrimaryKeySelective(cart);
+        }
+
+        CartVo cartVo = this.getCartVoLimit(userId); // this is the real cart
+        return ServerResponse.createBySuccess(cartVo);
+    }
+
     private CartVo getCartVoLimit(Integer userId) {
         CartVo cartVo = new CartVo();
         List<Cart> cartList = cartMapper.selectCartByUserId(userId);
