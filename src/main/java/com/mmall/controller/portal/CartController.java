@@ -48,4 +48,14 @@ public class CartController {
         }
         return iCartService.delete(user.getId(), productIds);
     }
+
+    @RequestMapping("list")
+    @ResponseBody
+    public ServerResponse list(HttpSession session) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.list(user.getId());
+    }
 }
