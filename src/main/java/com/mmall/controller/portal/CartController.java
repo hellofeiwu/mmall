@@ -38,4 +38,14 @@ public class CartController {
         }
         return iCartService.update(user.getId(), productId, count);
     }
+
+    @RequestMapping("delete")
+    @ResponseBody
+    public ServerResponse update(HttpSession session, String productIds) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.delete(user.getId(), productIds);
+    }
 }
