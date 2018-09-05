@@ -58,4 +58,54 @@ public class CartController {
         }
         return iCartService.list(user.getId());
     }
+
+    @RequestMapping("select_all")
+    @ResponseBody
+    public ServerResponse selectAll(HttpSession session) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.selectDeselect(user.getId(), null, Const.Cart.CHECKED);
+    }
+
+    @RequestMapping("deselect_all")
+    @ResponseBody
+    public ServerResponse deselectAll(HttpSession session) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.selectDeselect(user.getId(), null, Const.Cart.UN_CHECKED);
+    }
+
+    @RequestMapping("select")
+    @ResponseBody
+    public ServerResponse select(HttpSession session, Integer productId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.selectDeselect(user.getId(), productId, Const.Cart.CHECKED);
+    }
+
+    @RequestMapping("deselect")
+    @ResponseBody
+    public ServerResponse deselect(HttpSession session, Integer productId) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.selectDeselect(user.getId(), productId, Const.Cart.UN_CHECKED);
+    }
+
+    @RequestMapping("count")
+    @ResponseBody
+    public ServerResponse deselect(HttpSession session) {
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "user not logged in, please log in");
+        }
+        return iCartService.getCount(user.getId());
+    }
 }
