@@ -126,10 +126,7 @@
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.Shipping" >
     update mmall_shipping
-    <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
+    <set>
       <if test="receiverName != null" >
         receiver_name = #{receiverName,jdbcType=VARCHAR},
       </if>

@@ -43,6 +43,9 @@ public class ShippingServiceImpl implements IShippingService {
         if(shipping.getId() == null) {
             return ServerResponse.createByErrorMessage("shippingId cannot be null");
         }
+
+        shipping.setUserId(userId); // avoid sending fake userId
+
         int count = shippingMapper.updateByPrimaryKeySelective(userId, shipping);
         if(count > 0) {
             return ServerResponse.createBySuccessMessage("update succeed");
