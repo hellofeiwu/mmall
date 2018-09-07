@@ -46,7 +46,7 @@ public class ShippingServiceImpl implements IShippingService {
 
         shipping.setUserId(userId); // avoid sending fake userId
 
-        int count = shippingMapper.updateByPrimaryKeySelective(userId, shipping);
+        int count = shippingMapper.updateByPrimaryKeySelective(shipping);
         if(count > 0) {
             return ServerResponse.createBySuccessMessage("update succeed");
         }else {

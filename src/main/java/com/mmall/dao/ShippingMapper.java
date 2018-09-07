@@ -14,7 +14,7 @@ public interface ShippingMapper {
 
     Shipping selectByPrimaryKeyUserId(@Param("userId") Integer userId, @Param("id") Integer id);
 
-    int updateByPrimaryKeySelective(@Param("userId") Integer userId, @Param("record") Shipping record);
+    int updateByPrimaryKeySelective(Shipping record);
 
     int updateByPrimaryKey(Shipping record);
 
